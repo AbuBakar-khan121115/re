@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCQ Practice</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f7fb;color:#172033}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{max-width:1000px;margin:auto;padding:16px}.top{background:#fff;border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 5px 20px #0000000d}
+h1{margin:0;color:#2563eb}.muted{color:#64748b}.card{background:#fff;border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 5px 20px #0000000d}
+.grid{display:grid;gap:14px}.two{grid-template-columns:1fr 1fr}.four{grid-template-columns:repeat(4,1fr)}
+label{font-weight:700;display:block;margin-bottom:6px}input,textarea,select{width:100%;padding:12px;border:1px solid #dbe2ea;border-radius:10px;background:#fff}textarea{min-height:100px;resize:vertical}
+.btn{border:0;border-radius:11px;padding:12px 16px;font-weight:700}.primary{background:#2563eb;color:#fff}.success{background:#16a34a;color:#fff}.danger{background:#dc2626;color:#fff}.secondary{background:#e2e8f0;color:#172033}.small{padding:8px 11px;font-size:.9rem}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.actions .btn{flex:1;min-width:130px}
+.hidden{display:none!important}.choice{display:flex;gap:10px;align-items:center}.choice input{width:auto}
+.question-item{border:1px solid #e2e8f0;border-radius:14px;padding:14px;margin-top:10px}.question-item strong{display:block;margin-bottom:8px}.qopts{color:#475569;font-size:.94rem}.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:.8rem;font-weight:700}
+.exam-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.timer{font-size:1.3rem;font-weight:900;background:#fee2e2;color:#b91c1c;padding:9px 14px;border-radius:12px}.progress{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin:15px 0}.bar{height:100%;background:#2563eb;transition:.2s}.exam-q{font-size:1.25rem;font-weight:800;margin:20px 0}.option{width:100%;text-align:left;padding:15px;margin:7px 0;border:2px solid #e2e8f0;background:#fff;border-radius:13px}.option.selected{border-color:#2563eb;background:#eff6ff}.letter{display:inline-flex;width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;background:#e2e8f0;margin-right:10px;font-weight:900}.selected .letter{background:#2563eb;color:#fff}
+.palette{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.pal{width:40px;height:40px;border:0;border-radius:9px;background:#e2e8f0;font-weight:800}.pal.attempted{background:#bfdbfe;color:#1d4ed8}.pal.current{outline:3px solid #172033}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:16px;border-radius:13px;background:#f8fafc;text-align:center}.stat b{display:block;font-size:1.5rem}.score{font-size:2.3rem;font-weight:900;color:#2563eb;text-align:center}
+.review{border:1px solid #e2e8f0;border-radius:13px;padding:15px;margin:10px 0}.correct{color:#15803d}.wrong{color:#b91c1c}.unanswered{color:#a16207}
+.drop{border:2px dashed #94a3b8;padding:20px;border-radius:14px;text-align:center}.hint{font-size:.88rem;color:#64748b}
+
+/* Modal styles */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal{background:#fff;border-radius:18px;padding:24px;width:90%;max-width:400px;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+.modal h3{margin-top:0}
+
+@media(max-width:650px){.two,.four,.stats{grid-template-columns:1fr}.app{padding:10px}.card{padding:15px}.exam-q{font-size:1.1rem}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<h1>MCQ Practice</h1>
+<div class="muted">Create • Practice • Check • Improve</div>
+</header>
+
+<section id="createPage">
+<div class="card">
+<h2>Create Exam</h2>
+<div class="form-group">
+<label>Exam Title</label><input id="examTitle" placeholder="e.g. Class 9 Science Test">
+</div>
+<div class="grid two">
+<div><label>Option labels</label>
+<select id="labelStyle"><option value="alpha">A, B, C, D</option><option value="numeric">1, 2, 3, 4</option></select></div>
+<div><label>Quick add format</label><div class="hint">Paste question, 4 options and answer below.</div></div>
+</div>
+<hr>
+<h3>Add Question</h3>
+<label>Question</label><textarea id="qText" placeholder="What is the capital of India?"></textarea>
+<div class="grid two">
+<div><label id="l0">Option A</label><input id="o0"></div>
+<div><label id="l1">Option B</label><input id="o1"></div>
+<div><label id="l2">Option C</label><input id="o2"></div>
+<div><label id="l3">Option D</label><input id="o3"></div>
+</div>
+<div style="margin-top:14px"><label>Correct Answer</label>
+<select id="correct"><option value="0">A / 1</option><option value="1">B / 2</option><option value="2">C / 3</option><option value="3">D / 4</option></select></div>
+<div class="actions"><button class="btn primary" id="addBtn">+ Add Question</button><button class="btn secondary" id="clearForm">Clear</button></div>
+</div>
+
+<div class="card">
+<h2>Paste MCQs</h2>
+<div class="hint">Example: Question line → four option lines → Answer: B. Multiple questions can be pasted together.</div>
+<textarea id="bulkText" placeholder="Q1. What is 2 + 2?
+A. 3
+B. 4
+C. 5
+D. 6
+Answer: B
+
+Q2. Which is a planet?
+A. Sun
+B. Moon
+C. Earth
+D. Star
+Answer: C"></textarea>
+<div class="actions"><button class="btn primary" id="parseBtn">Parse & Add Questions</button></div>
+</div>
+
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<h2 style="margin:0">Question Bank <span id="count" class="badge">0</span></h2>
+<button class="btn danger small" id="deleteAll">Clear All</button>
+</div>
+<div id="bank"></div>
+<div class="actions"><button class="btn success" id="startBtn">🚀 Start Exam</button></div>
+</div>
+
+<!-- Meet Developer -->
+<div class="card">
+<h2>Meet Developer</h2>
+<div class="muted">Abu Bakar Khan X Chat GPT</div>
+</div>
+</section>
+
+<!-- Timer Selection Modal -->
+<div id="timerModal" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>Set Timer Options</h3>
+    <label class="choice">
+      <input type="radio" name="timerType" value="default" checked id="timerDefault">
+      Default Timer (<span id="defaultMinutes">1</span> min/question)
+    </label>
+    <label class="choice" style="margin-top:10px;">
+      <input type="radio" name="timerType" value="custom" id="timerCustom">
+      Own Timer (Custom minutes)
+    </label>
+    <div id="customTimerInput" class="hidden" style="margin-top:10px;">
+      <label>Enter total time in minutes:</label>
+      <input type="number" id="customMinutes" min="1" placeholder="e.g. 15">
+    </div>
+    <div class="actions" style="margin-top:18px;">
+      <button class="btn secondary" id="cancelTimerBtn">Cancel</button>
+      <button class="btn primary" id="confirmTimerBtn">Start Exam</button>
+    </div>
+  </div>
+</div>
+
+<section id="examPage" class="hidden">
+<div class="card">
+<div class="exam-top"><div><h2 id="runTitle">MAQ Practice</h2><div class="muted" id="qCounter"></div></div><div class="timer" id="timer">00:00</div></div>
+<div class="progress"><div class="bar" id="progressBar"></div></div>
+<div id="examQuestion"></div>
+<div class="actions"><button class="btn secondary" id="prev">← Previous</button><button class="btn primary" id="next">Next →</button></div>
+<hr>
+<h3>Question Navigation</h3><div class="hint">Blue = attempted • outlined = current</div><div class="palette" id="palette"></div>
+<div class="actions"><button class="btn danger" id="submit">🏁 Submit Exam</button></div>
+</div>
+</section>
+
+<section id="resultPage" class="hidden">
+<div class="card">
+<h2 id="resultTitle">MAQ Practice — Result</h2>
+<div class="score" id="score"></div>
+<div class="stats">
+<div class="stat">Total<b id="rTotal">0</b></div><div class="stat">Attempted<b id="rAttempted">0</b></div><div class="stat">Correct<b id="rCorrect">0</b></div><div class="stat">Wrong<b id="rWrong">0</b></div>
+</div>
+<div class="stat" style="margin-top:10px">Unanswered<b id="rUnanswered">0</b></div>
+<div class="actions"><button class="btn primary" id="reviewBtn">🔍 Review Answers</button><button class="btn success" id="newBtn">🔄 Create New Exam</button></div>
+</div>
+<div id="reviewBox" class="card hidden"><h2>Answer Review</h2><div id="reviews"></div></div>
+</section>
+</div>
+
+<script>
+const KEY="MAQ_PRACTICE_V2";
+let questions=JSON.parse(localStorage.getItem(KEY)||"[]");
+let title=localStorage.getItem(KEY+"_TITLE")||"MAQ Practice";
+let labelStyle=localStorage.getItem(KEY+"_LABEL")||"alpha";
+let editing=-1, exam=[], answers=[], current=0, timerId=null, secondsLeft=0, finished=false;
+
+const $=id=>document.getElementById(id);
+const labels=()=>labelStyle==="alpha"?["A","B","C","D"]:["1","2","3","4"];
+function save(){localStorage.setItem(KEY,JSON.stringify(questions));localStorage.setItem(KEY+"_TITLE",$("examTitle").value||title);localStorage.setItem(KEY+"_LABEL",labelStyle)}
+function updateLabels(){
+ labelStyle=$("labelStyle").value;let L=labels();
+ for(let i=0;i<4;i++){$("l"+i).textContent="Option "+L[i]}
+ $("correct").innerHTML=L.map((x,i)=>`<option value="${i}">${x}</option>`).join("");
+ save();renderBank();
+}
+$("examTitle").value=title;$("labelStyle").value=labelStyle;
+$("labelStyle").onchange=updateLabels;updateLabels();
+
+function clearForm(){editing=-1;$("qText").value="";for(let i=0;i<4;i++)$("o"+i).value="";$("correct").value="0";$("addBtn").textContent="+ Add Question"}
+$("clearForm").onclick=clearForm;
+
+$("addBtn").onclick=()=>{
+ let q=$("qText").value.trim(), opts=[0,1,2,3].map(i=>$("o"+i).value.trim()), c=+$("correct").value;
+ if(!q||opts.some(x=>!x)){alert("Please enter the question and all 4 options.");return}
+ let obj={question:q,options:opts,correctAnswer:c};
+ if(editing>=0) questions[editing]=obj; else questions.push(obj);
+ save();renderBank();clearForm();
+};
+function renderBank(){
+ $("count").textContent=questions.length;$("bank").innerHTML=questions.length?questions.map((q,i)=>{
+ let L=labels();
+ return `<div class="question-item"><strong>Q${i+1}. ${esc(q.question)}</strong>
+ <div class="qopts">${q.options.map((o,j)=>`${L[j]}.${esc(o)}`).join(" &nbsp; ")}</div>
+ <div class="hint">Correct: ${L[q.correctAnswer]}</div>
+ <div class="actions"><button class="btn secondary small" onclick="editQ(${i})">Edit</button><button class="btn danger small" onclick="delQ(${i})">Delete</button></div></div>`
+ }).join(""):"<p class='muted'>No questions yet. Add at least one question to start.</p>";
+}
+window.editQ=i=>{let q=questions[i];editing=i;$("qText").value=q.question;q.options.forEach((x,j)=>$("o"+j).value=x);$("correct").value=q.correctAnswer;$("addBtn").textContent="Save Question";window.scrollTo({top:0,behavior:"smooth"})}
+window.delQ=i=>{if(confirm("Delete this question?")){questions.splice(i,1);save();renderBank()}}
+$("deleteAll").onclick=()=>{if(confirm("Clear all questions?")){questions=[];save();renderBank()}}
+
+function parseMCQ(text){
+ let lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean), out=[], cur=null;
+ const isOpt=s=>/^(?:[A-Da-d]|[1-4])[\s.)\-:]+/.test(s);
+ const isAns=s=>/^(?:answer|ans|correct(?:\s+answer)?)[\s:=\-]+([A-Da-d1-4])\b/i.test(s);
+ function finish(){if(cur&&cur.q&&cur.opts.length===4&&cur.c!==null)out.push({question:cur.q,options:cur.opts,correctAnswer:cur.c});cur=null}
+ for(let line of lines){
+  if(isAns(line)){if(!cur)continue;let m=line.match(/([A-Da-d1-4])\s*$/);let v=m?m[1].toUpperCase():"";cur.c=/^[A-D]$/.test(v)?v.charCodeAt(0)-65:+v-1;finish();continue}
+  if(isOpt(line)){
+   let m=line.match(/^(?:[A-Da-d]|[1-4])[\s.)\-:]+(.*)$/);if(!cur){continue}cur.opts.push(m[1].trim());continue
+  }
+  if(!cur){cur={q:line.replace(/^(?:Q(?:uestion)?\s*)?\d+[\s.)\-:]*/i,"").trim(),opts:[],c:null};continue}
+  if(cur.opts.length<4 && !isOpt(line) && !isAns(line)) cur.q+=" "+line;
+ }
+ finish();return out;
+}
+$("parseBtn").onclick=()=>{
+ let arr=parseMCQ($("bulkText").value);if(!arr.length){alert("No complete MCQs found. Use 4 options and an Answer line.");return}
+ questions.push(...arr);save();renderBank();$("bulkText").value="";alert(arr.length+" question(s) added.");
+};
+
+// Timer Modal Handling
+$("startBtn").onclick=()=>{
+ if(!questions.length){alert("Please add at least one question first.");return}
+ $("defaultMinutes").textContent = questions.length;
+ $("timerModal").classList.remove("hidden");
+};
+
+$("timerDefault").onclick = () => $("customTimerInput").classList.add("hidden");
+$("timerCustom").onclick = () => $("customTimerInput").classList.remove("hidden");
+
+$("cancelTimerBtn").onclick = () => $("timerModal").classList.add("hidden");
+
+$("confirmTimerBtn").onclick = () => {
+ let totalMinutes = questions.length;
+ if ($("timerCustom").checked) {
+  let cust = parseInt($("customMinutes").value);
+  if (!cust || cust <= 0) {
+   alert("Please enter a valid number of minutes.");
+   return;
+  }
+  totalMinutes = cust;
+ }
+ $("timerModal").classList.add("hidden");
+ startExam(totalMinutes);
+};
+
+function startExam(durationInMinutes){
+ title=$("examTitle").value.trim()||"MAQ Practice";save();
+ exam=questions.map(q=>({...q,options:[...q.options]}));answers=Array(exam.length).fill(null);current=0;finished=false;
+ secondsLeft = durationInMinutes * 60;
+ $("createPage").classList.add("hidden");$("resultPage").classList.add("hidden");$("examPage").classList.remove("hidden");
+ renderExam();clearInterval(timerId);timerId=setInterval(tick,1000);tick();
+}
+
+function tick(){let m=Math.floor(secondsLeft/60),s=secondsLeft%60;$("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");if(secondsLeft<=0){clearInterval(timerId);submitExam(true);return}secondsLeft--}
+function renderExam(){
+ let q=exam[current],L=labels();$("runTitle").textContent=title+" — Exam";$("qCounter").textContent=`Question ${current+1} of ${exam.length}`;
+ $("progressBar").style.width=((current+1)/exam.length*100)+"%";
+ $("examQuestion").innerHTML=`<div class="exam-q">${current+1}. ${esc(q.question)}</div>`+q.options.map((o,i)=>`<button class="option ${answers[current]===i?"selected":""}" onclick="choose(${i})"><span class="letter">${L[i]}</span>${esc(o)}</button>`).join("");
+ $("prev").disabled=current===0;$("next").textContent=current===exam.length-1?"Last Question →":"Next →";renderPalette();
+}
+window.choose=i=>{answers[current]=i;renderExam()}
+$("prev").onclick=()=>{if(current>0){current--;renderExam()}}
+$("next").onclick=()=>{if(current<exam.length-1){current++;renderExam()}}
+function renderPalette(){$("palette").innerHTML=exam.map((_,i)=>`<button class="pal ${answers[i]!==null?"attempted":""} ${i===current?"current":""}" onclick="goQ(${i})">${i+1}</button>`).join("")}
+window.goQ=i=>{current=i;renderExam()}
+
+$("submit").onclick=()=>{let unanswered=answers.filter(x=>x===null).length;if(unanswered&& !confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`))return;submitExam(false)}
+function submitExam(auto){
+ if(finished)return;finished=true;clearInterval(timerId);
+ let correct=0,attempted=0;answers.forEach((a,i)=>{if(a!==null){attempted++;if(a===exam[i].correctAnswer)correct++}});
+ let total=exam.length,wrong=attempted-correct,unanswered=total-attempted,pct=total?correct/total*100:0;
+ $("examPage").classList.add("hidden");$("resultPage").classList.remove("hidden");$("reviewBox").classList.add("hidden");
+ $("resultTitle").textContent=title+" — Result";$("score").textContent=`${correct}/${total} • ${pct.toFixed(0)}%`;
+ $("rTotal").textContent=total;$("rAttempted").textContent=attempted;$("rCorrect").textContent=correct;$("rWrong").textContent=wrong;$("rUnanswered").textContent=unanswered;
+ if(auto) alert("Time is up. The exam was automatically submitted.");
+}
+$("reviewBtn").onclick=()=>{
+ $("reviewBox").classList.remove("hidden");let L=labels();
+ $("reviews").innerHTML=exam.map((q,i)=>{
+ let a=answers[i],status=a===null?"unanswered":a===q.correctAnswer?"correct":"wrong";
+ return `<div class="review"><strong>Q${i+1}. ${esc(q.question)}</strong><p>Your answer: ${a===null?"Unanswered":L[a]+". "+esc(q.options[a])}</p><p>Correct answer: ${L[q.correctAnswer]}. ${esc(q.options[q.correctAnswer])}</p><b class="${status}">${status==="correct"?"✓ Correct":status==="wrong"?"✗ Wrong":"• Unanswered"}</b></div>`
+ }).join("");
+ $("reviewBox").scrollIntoView({behavior:"smooth"});
+}
+$("newBtn").onclick=()=>{clearInterval(timerId);$("resultPage").classList.add("hidden");$("createPage").classList.remove("hidden");renderBank();window.scrollTo(0,0)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+renderBank();
+</script>
+</body>
+</html>
